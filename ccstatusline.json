@@ -1,0 +1,91 @@
+{
+  "version": 3,
+  "lines": [
+    [
+      {
+        "id": "77040024-f1ba-4098-b3cf-572192f3a74c",
+        "type": "git-branch",
+        "color": "hex:8BE9FD",
+        "bold": true,
+        "rawValue": false
+      },
+      {
+        "id": "97f8d5c6-a2df-4be3-9adf-1d53eddf9be1",
+        "type": "git-changes",
+        "color": "hex:F8F8F2",
+        "bold": true
+      }
+    ],
+    [
+      {
+        "id": "1",
+        "type": "model",
+        "color": "hex:FF79C6",
+        "bold": true
+      },
+      {
+        "id": "5",
+        "type": "context-percentage",
+        "color": "hex:BD93F9",
+        "bold": true
+      },
+      {
+        "id": "7",
+        "type": "session-usage",
+        "color": "hex:88E9FD",
+        "bold": true
+      },
+      {
+        "id": "b52e3917-cff6-45c3-acf8-1a113126cc65",
+        "type": "weekly-usage",
+        "color": "hex:8BE9FD",
+        "bold": true
+      }
+    ],
+    [
+      {
+        "id": "750a695f-7d67-40ff-ad31-01f791347887",
+        "type": "tokens-input",
+        "color": "hex:FFB86C",
+        "bold": true
+      },
+      {
+        "id": "b674c413-febb-4958-b574-00926c8daa7a",
+        "type": "tokens-output",
+        "color": "hex:FFB86C",
+        "bold": true
+      },
+      {
+        "id": "2ad6af3d-44ff-44de-ab74-e03ad4cd20e2",
+        "type": "tokens-cached",
+        "color": "hex:50FA7B",
+        "bold": true
+      },
+      {
+        "id": "86c69ce6-48f6-4b61-97f6-c0ab9029125d",
+        "type": "tokens-total",
+        "color": "hex:BD93F9",
+        "bold": true
+      }
+    ]
+  ],
+  "flexMode": "full-minus-40",
+  "compactThreshold": 60,
+  "colorLevel": 3,
+  "defaultPadding": " ",
+  "inheritSeparatorColors": false,
+  "globalBold": false,
+  "powerline": {
+    "enabled": true,
+    "separators": [
+      "|"
+    ],
+    "separatorInvertBackground": [
+      true
+    ],
+    "startCaps": [],
+    "endCaps": [],
+    "theme": "custom",
+    "autoAlign": false
+  }
+}
