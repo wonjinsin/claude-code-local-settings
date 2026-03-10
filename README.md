@@ -14,7 +14,7 @@ A personal collection of Claude Code local configuration files stored in `~/.cla
 npx -y ccstatusline@latest
 ```
 
-The config file lives at `~/.config/ccstatusline/ccstatusline.json`.
+Put file `ccstatusline.json` content into path `~/.config/ccstatusline/ccstatusline.json`.
 
 ### CLAUDE.md
 
@@ -26,4 +26,4 @@ The config file lives at `~/.config/ccstatusline/ccstatusline.json`.
 
 ### keybindings.json
 
-`~/.claude/keybindings.json` defines custom key bindings:
+`~/.claude/keybindings.json` defines custom key bindings.
