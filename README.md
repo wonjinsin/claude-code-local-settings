@@ -24,6 +24,16 @@ Put file `ccstatusline.json` content into path `~/.config/ccstatusline/ccstatusl
 
 `~/.claude/settings.json` defines the settings for Claude Code.
 
+Plugins listed in `enabledPlugins` must be installed separately via:
+
+```bash
+/plugin install {plugin-name}@{marketplace}
+```
+
 ### keybindings.json
 
 `~/.claude/keybindings.json` defines custom key bindings.
+
+### .mcp.json
+
+Add the `mcpServers` entries from `.mcp.json` into `~/.claude.json` to enable MCP servers globally.
