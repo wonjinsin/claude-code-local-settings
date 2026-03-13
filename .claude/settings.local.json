@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/WonjinSin/.claude log --oneline -10)",
+      "Read(//Users/WonjinSin/**)",
+      "Read(//Users/WonjinSin/Documents/**)",
+      "Bash(git commit:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(git -C /Users/WonjinSin/.claude status && git -C /Users/WonjinSin/.claude diff HEAD)",
+      "Bash(git -C /Users/WonjinSin/.claude add README.md settings.json && git -C /Users/WonjinSin/.claude commit -m \"docs: add plugin install instructions and mcp.json setup guide\")",
+      "Bash(git -C /Users/WonjinSin/.claude diff --cached)",
+      "Bash(git -C /Users/WonjinSin/.claude commit -m \"chore: add .mcp.json with shrimp-task-manager server configuration\")"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "shrimp-task-manager"
+  ]
+}
