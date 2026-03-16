@@ -9,7 +9,12 @@
       "Bash(git -C /Users/WonjinSin/.claude status && git -C /Users/WonjinSin/.claude diff HEAD)",
       "Bash(git -C /Users/WonjinSin/.claude add README.md settings.json && git -C /Users/WonjinSin/.claude commit -m \"docs: add plugin install instructions and mcp.json setup guide\")",
       "Bash(git -C /Users/WonjinSin/.claude diff --cached)",
-      "Bash(git -C /Users/WonjinSin/.claude commit -m \"chore: add .mcp.json with shrimp-task-manager server configuration\")"
+      "Bash(git -C /Users/WonjinSin/.claude commit -m \"chore: add .mcp.json with shrimp-task-manager server configuration\")",
+      "WebSearch",
+      "WebFetch(domain:stevekinney.com)",
+      "WebFetch(domain:smartscope.blog)",
+      "WebFetch(domain:github.com)",
+      "Bash(ls:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
