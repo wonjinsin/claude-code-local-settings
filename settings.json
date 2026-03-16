@@ -1,14 +1,4 @@
 {
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y ccstatusline@latest",
-    "padding": 0
-  },
-  "enabledPlugins": {
-    "skill-creator@claude-plugins-official": true
-  },
-  "effortLevel": "medium",
-  "skipDangerousModePermissionPrompt": true,
   "hooks": {
     "Stop": [
       {
@@ -20,5 +10,15 @@
         ]
       }
     ]
-  }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
+  },
+  "effortLevel": "medium",
+  "skipDangerousModePermissionPrompt": true
 }
