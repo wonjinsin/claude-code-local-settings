@@ -1,0 +1,17 @@
+*
+!README.md
+!CLAUDE.md
+!settings.json
+!ccstatusline.json
+!keybindings.json
+!.mcp.json
+!skills
+!skills/**
+!.claude
+!.claude/**
+!.env.example
+!hooks
+!hooks/**
+!.gitignore
+
+.claude/settings.local.json
