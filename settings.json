@@ -1,11 +1,15 @@
 {
+  "env": {
+    "EDITOR": "vim"
+  },
+  "model": "sonnet",
   "hooks": {
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "./hooks/notify-slack.sh"
+            "command": "~/.claude/hooks/notify-slack.sh"
           }
         ]
       }
@@ -17,9 +21,9 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true
   },
   "effortLevel": "medium",
-  "skipDangerousModePermissionPrompt": true,
-  "model": "sonnet"
+  "skipDangerousModePermissionPrompt": true
 }

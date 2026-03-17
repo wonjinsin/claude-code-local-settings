@@ -18,6 +18,16 @@
         "TEMPLATES_USE": "en",
         "ENABLE_GUI": "false"
       }
+    },
+    "notion": {
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp"
+    },
+    "task-master-ai": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "task-master-ai"],
+      "env": {}
     }
   }
 }
