@@ -7,11 +7,11 @@
 !.mcp.json
 !skills
 !skills/**
-!.claude
-!.claude/**
 !.env.example
 !hooks
 !hooks/**
 !.gitignore
-
-.claude/settings.local.json
+!rules
+!rules/**
+!agents
+!agents/**
