@@ -2,6 +2,7 @@
   "env": {
     "EDITOR": "vim"
   },
+  "model": "opus",
   "hooks": {
     "Stop": [
       {
@@ -23,7 +24,8 @@
     "skill-creator@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
-    "impeccable@impeccable": true
+    "impeccable@impeccable": true,
+    "swift-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "impeccable": {
@@ -31,8 +33,13 @@
         "source": "github",
         "repo": "pbakaus/impeccable"
       }
+    },
+    "harness-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "revfactory/harness"
+      }
     }
   },
-  "effortLevel": "medium",
   "skipDangerousModePermissionPrompt": true
 }

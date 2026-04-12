@@ -15,6 +15,7 @@ npx -y ccstatusline@latest
 ```
 
 Put file `ccstatusline.json` content into path `~/.config/ccstatusline/ccstatusline.json`.
+Put file `ccstatusline-settings.json` content into path `~/.config/ccstatusline/settings.json`.
 
 ### CLAUDE.md
 

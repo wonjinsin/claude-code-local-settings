@@ -3,11 +3,22 @@
   "lines": [
     [
       {
+        "id": "9f1602d6-7e25-482b-824b-d2e8b4bae071",
+        "type": "custom-command",
+        "commandPath": "pwd | xargs basename",
+        "preserveColors": false,
+        "bold": true,
+        "color": "hex:BD93F9"
+      },
+      {
         "id": "77040024-f1ba-4098-b3cf-572192f3a74c",
         "type": "git-branch",
         "color": "hex:8BE9FD",
         "bold": true,
-        "rawValue": false
+        "rawValue": false,
+        "metadata": {
+          "linkToGitHub": "false"
+        }
       },
       {
         "id": "97f8d5c6-a2df-4be3-9adf-1d53eddf9be1",
@@ -69,12 +80,13 @@
       }
     ]
   ],
-  "flexMode": "full-minus-40",
+  "flexMode": "full-until-compact",
   "compactThreshold": 60,
   "colorLevel": 3,
   "defaultPadding": " ",
   "inheritSeparatorColors": false,
   "globalBold": false,
+  "minimalistMode": false,
   "powerline": {
     "enabled": true,
     "separators": [
@@ -86,6 +98,7 @@
     "startCaps": [],
     "endCaps": [],
     "theme": "custom",
-    "autoAlign": false
+    "autoAlign": false,
+    "continueThemeAcrossLines": false
   }
 }
