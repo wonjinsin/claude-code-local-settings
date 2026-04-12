@@ -2,7 +2,7 @@
   "env": {
     "EDITOR": "vim"
   },
-  "model": "opus",
+  "model": "opusplan",
   "hooks": {
     "Stop": [
       {
