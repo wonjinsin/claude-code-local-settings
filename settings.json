@@ -2,7 +2,10 @@
   "env": {
     "EDITOR": "vim"
   },
-  "model": "opusplan",
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "model": "sonnet",
   "hooks": {
     "Stop": [
       {
@@ -17,15 +20,18 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "npx -y ccstatusline@latest",
+    "command": "npx -y ccstatusline@2.2.12",
     "padding": 0
   },
   "enabledPlugins": {
     "skill-creator@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
     "impeccable@impeccable": true,
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "harness-flow@harness": true,
+    "session-report@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "impeccable": {
@@ -39,7 +45,15 @@
         "source": "github",
         "repo": "revfactory/harness"
       }
+    },
+    "harness": {
+      "source": {
+        "source": "github",
+        "repo": "wonjinsin/harness-flow"
+      }
     }
   },
-  "skipDangerousModePermissionPrompt": true
+  "advisorModel": "opus",
+  "skipDangerousModePermissionPrompt": true,
+  "skipAutoPermissionPrompt": true
 }

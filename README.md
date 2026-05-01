@@ -11,7 +11,7 @@ A personal collection of Claude Code local configuration files stored in `~/.cla
 **Installation (first-time setup):**
 
 ```bash
-npx -y ccstatusline@latest
+npx -y ccstatusline@2.2.12
 ```
 
 Put file `ccstatusline.json` content into path `~/.config/ccstatusline/ccstatusline.json`.
