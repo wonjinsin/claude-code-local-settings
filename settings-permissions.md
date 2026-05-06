@@ -31,6 +31,14 @@
       "Bash(gh pr create:*)", // PR creation auto-approved — wrong PRs recoverable via close
       "Bash(gh issue view:*)", // View issue
       "Bash(gh repo view:*)", // View repo
+      "Bash(git log:*)", // Commit history — read-only
+      "Bash(git status:*)", // Working tree state — read-only
+      "Bash(git diff:*)", // Diff (staged/unstaged/between refs) — read-only
+      "Bash(git merge-base:*)", // Common ancestor lookup — read-only
+      "Bash(git worktree list)", // List worktrees (exact match — `add`/`remove` modify state)
+      "Bash(git check-ignore:*)", // Check if a path is gitignored — read-only
+      "Bash(git checkout:*)", // Branch switch / file restore — common workflow
+      "Bash(node --test:*)", // Node 18+ built-in test runner
     ],
     "ask": [
       "Bash(git push --force:*)", // Rewrites remote history — confirm intent
