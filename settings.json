@@ -100,7 +100,8 @@
     "session-report@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
     "hookify@claude-plugins-official": true,
-    "claude-code-setup@claude-plugins-official": true
+    "claude-code-setup@claude-plugins-official": true,
+    "harness-flow@harness-flow": true
   },
   "extraKnownMarketplaces": {
     "impeccable": {

@@ -1,7 +1,7 @@
 ---
 name: improve-token-efficiency
 description: Claude Code 세션 JSONL 로그를 파싱하여 토큰/컨텍스트 효율 리포트(HTML 대시보드 + $ 절감안)를 생성하는 스킬. '토큰 효율 분석', '세션 효율', '비용 분석', 'Claude Code usage report', 'analyze token efficiency', 'show session cost', 'improve token efficiency', 'efficiency score', 'how much did I spend on Claude', 'session report' 등의 요청에 반드시 트리거할 것. 사용자가 레포의 Claude Code 사용 패턴/비용/효율을 알고 싶어하거나 어떻게 줄일지 문의할 때 사용. 단일 세션이 아니라 '여러 세션 전체'에 대한 집계·점수화·시각화가 필요한 모든 경우에 적용.
-Based on skills_repo(https://github.com/jha0313/skills_repo)
+Based on improve-token-efficiency(https://github.com/jha0313/skills_repo/improve-token-efficiency)
 ---
 
 # Improve Token Efficiency
