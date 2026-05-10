@@ -75,6 +75,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "sonnet",
   "hooks": {
     "Stop": [
       {
@@ -99,8 +100,7 @@
     "session-report@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
     "hookify@claude-plugins-official": true,
-    "claude-code-setup@claude-plugins-official": true,
-    "harness-flow@harness-flow": true
+    "claude-code-setup@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "impeccable": {
