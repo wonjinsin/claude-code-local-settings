@@ -66,7 +66,9 @@
       "Bash(tree:*)",
       "Bash(wc:*)",
       "Bash(which:*)",
-      "Bash(yq:*)"
+      "Bash(yq:*)",
+      "Write(~/.claude/README.md)",
+      "Edit(~/.claude/README.md)"
     ],
     "deny": [
       "Bash(aws configure:*)",
