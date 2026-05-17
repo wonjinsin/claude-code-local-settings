@@ -1,6 +1,7 @@
 {
   "env": {
-    "EDITOR": "vim"
+    "EDITOR": "vim",
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1"
   },
   "permissions": {
     "allow": [
@@ -135,31 +136,14 @@
     "claude-code-setup@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
-    "impeccable": {
-      "source": {
-        "source": "github",
-        "repo": "pbakaus/impeccable"
-      }
-    },
-    "harness-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "revfactory/harness"
-      }
-    },
     "harness-flow": {
       "source": {
         "source": "github",
         "repo": "wonjinsin/harness-flow"
       }
-    },
-    "everything-claude-code": {
-      "source": {
-        "source": "git",
-        "url": "https://github.com/affaan-m/everything-claude-code.git"
-      }
     }
   },
+  "effortLevel": "high",
   "advisorModel": "opus",
   "skipDangerousModePermissionPrompt": true,
   "skipAutoPermissionPrompt": true
