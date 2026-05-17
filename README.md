@@ -2,6 +2,15 @@
 
 A personal collection of [Claude Code](https://docs.claude.com/en/docs/claude-code) configuration files kept under `~/.claude`. Use it to quickly restore your environment on a new machine, or as a reference for reproducing the same workflow.
 
+> [!IMPORTANT]
+> **Working with `CLAUDE.md`? Use [`wonjinsin/harness-flow`](https://github.com/wonjinsin/harness-flow).**
+>
+> Almost every `CLAUDE.md` in my projects is driven by [harness-flow](https://github.com/wonjinsin/harness-flow) — a Claude Code plugin that enforces a structured spec → plan → TDD → review workflow with gated checkpoints. If you are adopting any of the conventions in this repository, install harness-flow first; the rules and skills here assume that workflow is in place.
+>
+> ```bash
+> /plugin install harness-flow@wonjinsin
+> ```
+
 > [!NOTE]
 > This repository is a personal backup. Rather than cloning the files as-is, pick the parts that fit your own environment.
 
