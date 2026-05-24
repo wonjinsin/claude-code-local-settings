@@ -16,3 +16,5 @@
 !rules/**
 !agents
 !agents/**
+!statusline
+!statusline/**

@@ -23,14 +23,15 @@ A personal collection of [Claude Code](https://docs.claude.com/en/docs/claude-co
 | MCP servers | `.mcp.json` | Registration for `context7` and `sequential-thinking` MCP servers |
 | Hooks | `hooks/notify-slack.sh` | Sends a Slack Block Kit notification on session stop |
 | Skills | `skills/` | User-defined skills that encapsulate common workflows |
-| Status line | `ccstatusline-settings.json` | `ccstatusline` renderer configuration |
+| Status line | `statusline/statusline.js` | Single-file pure Node.js status line renderer |
 | Key bindings | `keybindings.json` | Custom keyboard shortcuts |
 
 ## Prerequisites
 
 - [Claude Code](https://docs.claude.com/en/docs/claude-code) CLI
 - [`jq`](https://jqlang.github.io/jq/) — used by the Slack hook to parse JSON
-- Node.js (npx) — required to run MCP servers and `ccstatusline`
+- Node.js — required to run MCP servers (via `npx`) and the status line script
+- (macOS) `security` keychain CLI — used by the status line to read the Claude Code OAuth token
 - (Optional) Slack Incoming Webhook URL — only if you want stop notifications
 
 ## Installation
@@ -49,6 +50,7 @@ cp keybindings.json  ~/.claude/keybindings.json
 cp -R rules          ~/.claude/rules
 cp -R skills         ~/.claude/skills
 cp -R hooks          ~/.claude/hooks
+cp -R statusline     ~/.claude/statusline
 ```
 
 > [!WARNING]
@@ -60,7 +62,7 @@ cp -R hooks          ~/.claude/hooks
 
 - `permissions`: allow / deny / ask rules for the `Bash`, `Read`, `Edit`, and `Write` tools
 - `hooks.Stop`: runs `~/.claude/hooks/notify-slack.sh` when a session ends
-- `statusLine`: renders the status line via `npx -y ccstatusline@2.2.12`
+- `statusLine`: renders the status line via `node ${HOME}/.claude/statusline/statusline.js`
 - `enabledPlugins`: official plugins in use (each must be installed separately with `/plugin install`)
 
 ```bash
@@ -108,20 +110,43 @@ If `SLACK_WEBHOOK_URL` is empty, the hook exits silently.
 
 Each skill is triggered automatically based on its `description` frontmatter in `SKILL.md`.
 
-### `ccstatusline`
+### `statusline/`
 
-[ccstatusline](https://github.com/sirmalloc/ccstatusline) is a status line renderer for Claude Code. Warm the cache once with:
+A single-file Node.js status line that replaces `ccstatusline`. No external packages — uses only Node built-ins.
 
-```bash
-npx -y ccstatusline@2.2.12
+Rendered output (three lines, Dracula palette):
+
+```
+<dir> | <branch> | (+<insertions>,-<deletions>)
+Model: <name> | Ctx Used: <%> | Session: <%> | Weekly: <%>
+In: <tokens> | Out: <tokens> | Cached: <tokens> | Total: <tokens>
 ```
 
-Then place the configuration file from this repository in its expected location:
+Data sources:
 
-```bash
-mkdir -p ~/.config/ccstatusline
-cp ccstatusline-settings.json ~/.config/ccstatusline/settings.json
+- `dir` / `branch` / changes — `cwd` from stdin, `git symbolic-ref`, `git diff --numstat`
+- `Model` — `model.display_name` from the JSON Claude Code pipes to stdin
+- `Ctx Used` — most recent main-chain `usage` from the transcript JSONL, divided by the context window (1M by default; edit `CONTEXT_WINDOW` in the script for 200k)
+- `In` / `Out` / `Cached` / `Total` — streaming-aware sum of all main-chain `usage` entries in the transcript
+- `Session` / `Weekly` — `five_hour.utilization` / `seven_day.utilization` from `GET https://api.anthropic.com/api/oauth/usage`, cached at `~/.cache/claude-statusline/usage.json` for 180 seconds
+
+The script runs in two modes from the same file:
+
+- Default: read stdin, render three lines, exit fast. If the usage cache is older than 180 seconds and no lock is active, it spawns itself in `--refresh` mode detached so the next invocation sees fresh values.
+- `--refresh`: read the OAuth token (macOS Keychain `Claude Code-credentials` first, then `~/.claude/.credentials.json`), call the usage endpoint, atomically write the cache. `429` responses honor `Retry-After` via `~/.cache/claude-statusline/usage.lock`.
+
+Configured in `settings.json`:
+
+```json
+"statusLine": {
+  "type": "command",
+  "command": "node ${HOME}/.claude/statusline/statusline.js",
+  "padding": 0
+}
 ```
+
+> [!NOTE]
+> The legacy `ccstatusline-settings.json` is kept for reference only and is no longer used.
 
 ### `keybindings.json`
 
@@ -136,7 +161,7 @@ cp ccstatusline-settings.json ~/.config/ccstatusline/settings.json
 ├── settings.json          # Permissions, hooks, plugins
 ├── keybindings.json       # Key bindings
 ├── .mcp.json              # MCP server definitions
-├── ccstatusline-settings.json  # Status line configuration
+├── statusline/            # Pure Node.js status line renderer
 ├── hooks/                 # Stop-hook scripts
 ├── rules/                 # Guidelines and documentation rules
 └── skills/                # User-defined skills
