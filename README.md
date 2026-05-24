@@ -23,7 +23,7 @@ A personal collection of [Claude Code](https://docs.claude.com/en/docs/claude-co
 | MCP servers | `.mcp.json` | Registration for `context7` and `sequential-thinking` MCP servers |
 | Hooks | `hooks/notify-slack.sh` | Sends a Slack Block Kit notification on session stop |
 | Skills | `skills/` | User-defined skills that encapsulate common workflows |
-| Status line | `ccstatusline.json`, `ccstatusline-settings.json` | `ccstatusline` renderer configuration |
+| Status line | `ccstatusline-settings.json` | `ccstatusline` renderer configuration |
 | Key bindings | `keybindings.json` | Custom keyboard shortcuts |
 
 ## Prerequisites
@@ -116,11 +116,10 @@ Each skill is triggered automatically based on its `description` frontmatter in 
 npx -y ccstatusline@2.2.12
 ```
 
-Then place the configuration files from this repository in their expected locations:
+Then place the configuration file from this repository in its expected location:
 
 ```bash
 mkdir -p ~/.config/ccstatusline
-cp ccstatusline.json          ~/.config/ccstatusline/ccstatusline.json
 cp ccstatusline-settings.json ~/.config/ccstatusline/settings.json
 ```
 
@@ -137,7 +136,7 @@ cp ccstatusline-settings.json ~/.config/ccstatusline/settings.json
 ├── settings.json          # Permissions, hooks, plugins
 ├── keybindings.json       # Key bindings
 ├── .mcp.json              # MCP server definitions
-├── ccstatusline*.json     # Status line configuration
+├── ccstatusline-settings.json  # Status line configuration
 ├── hooks/                 # Stop-hook scripts
 ├── rules/                 # Guidelines and documentation rules
 └── skills/                # User-defined skills
