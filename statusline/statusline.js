@@ -1,27 +1,17 @@
 #!/usr/bin/env node
 'use strict';
 
-// Pure Claude Code status line. Replaces ccstatusline.
-// One file. Node built-ins only. Two modes:
-//   node statusline.js              read stdin JSON, render 3 lines, optionally fork --refresh
-//   node statusline.js --refresh    call Anthropic /api/oauth/usage, write cache, exit
+// Pure Claude Code status line. Reads stdin JSON, renders 3 lines.
+// All metrics come from stdin — no external API calls, no cache, no OAuth.
+//   Session / Weekly: stdin rate_limits.{five_hour,seven_day}.used_percentage
+//   Ctx % + token breakdown: parsed from transcript JSONL (stdin lacks
+//   cumulative cached/total tokens).
 
 const fs = require('node:fs');
 const path = require('node:path');
-const os = require('node:os');
-const https = require('node:https');
-const { execFileSync, spawn } = require('node:child_process');
+const { execFileSync } = require('node:child_process');
 
-const CACHE_DIR = path.join(os.homedir(), '.cache', 'claude-statusline');
-const CACHE_FILE = path.join(CACHE_DIR, 'usage.json');
-const LOCK_FILE = path.join(CACHE_DIR, 'usage.lock');
-const CACHE_TTL_S = 180;
-const LOCK_TTL_S = 30;
-const DEFAULT_BACKOFF_S = 300;
-const API_TIMEOUT_MS = 5000;
 const CONTEXT_WINDOW = 1_000_000; // 1M ctx beta enabled in settings
-const KEYCHAIN_SERVICE = 'Claude Code-credentials';
-const USAGE_URL = 'https://api.anthropic.com/api/oauth/usage';
 
 // Dracula palette, bold
 const C = {
@@ -37,11 +27,7 @@ const C = {
 
 function paint(s, c) { return `${c}${s}${C.reset}`; }
 
-if (process.argv.includes('--refresh')) {
-    refreshUsage().catch(() => {}).finally(() => process.exit(0));
-} else {
-    main().catch(() => process.exit(0));
-}
+main().catch(() => process.exit(0));
 
 async function main() {
     const stdin = await readStdin();
@@ -56,7 +42,10 @@ async function main() {
     const branch = gitBranch(cwd);
     const changes = gitChanges(cwd);
     const tokens = getTokenMetrics(transcriptPath);
-    const usage = readUsageCache();
+
+    const rl = input.rate_limits || {};
+    const sessionUsage = rl.five_hour?.used_percentage ?? null;
+    const weeklyUsage = rl.seven_day?.used_percentage ?? null;
 
     const sep = paint(' | ', C.fg);
 
@@ -67,8 +56,8 @@ async function main() {
     const line2Parts = [
         paint(`Model: ${modelName}`, C.pink),
         paint(`Ctx Used: ${formatPct(tokens.ctxPct)}`, C.purple),
-        paint(`Session: ${formatPct(usage.sessionUsage)}`, C.cyan),
-        paint(`Weekly: ${formatPct(usage.weeklyUsage)}`, C.cyan),
+        paint(`Session: ${formatPct(sessionUsage)}`, C.cyan),
+        paint(`Weekly: ${formatPct(weeklyUsage)}`, C.cyan),
     ];
 
     const line3Parts = [
@@ -83,8 +72,6 @@ async function main() {
         line2Parts.join(sep) + '\n' +
         line3Parts.join(sep)
     );
-
-    maybeTriggerRefresh();
 }
 
 // ---------- stdin ----------
@@ -187,169 +174,4 @@ function fmtTok(n) {
 function formatPct(p) {
     if (p == null || Number.isNaN(p)) return '-%';
     return p.toFixed(1) + '%';
-}
-
-// ---------- usage cache (Session / Weekly) ----------
-function readUsageCache() {
-    try {
-        const obj = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
-        return {
-            sessionUsage: typeof obj.sessionUsage === 'number' ? obj.sessionUsage : null,
-            weeklyUsage:  typeof obj.weeklyUsage  === 'number' ? obj.weeklyUsage  : null,
-            fetchedAt: obj.fetchedAt || 0,
-            error: obj.error || null,
-        };
-    } catch {
-        return { sessionUsage: null, weeklyUsage: null, fetchedAt: 0, error: null };
-    }
-}
-
-function cacheAgeSeconds() {
-    try {
-        const stat = fs.statSync(CACHE_FILE);
-        return Math.floor((Date.now() - stat.mtimeMs) / 1000);
-    } catch { return Infinity; }
-}
-
-function activeLock() {
-    try {
-        const obj = JSON.parse(fs.readFileSync(LOCK_FILE, 'utf8'));
-        if (typeof obj.blockedUntil === 'number' && obj.blockedUntil * 1000 > Date.now()) return obj;
-    } catch { /* no lock or stale */ }
-    return null;
-}
-
-function writeLock(blockedUntilSec, error) {
-    try {
-        ensureCacheDir();
-        fs.writeFileSync(LOCK_FILE, JSON.stringify({ blockedUntil: blockedUntilSec, error }));
-    } catch { /* ignore */ }
-}
-
-function clearLock() {
-    try { fs.unlinkSync(LOCK_FILE); } catch { /* ignore */ }
-}
-
-function ensureCacheDir() {
-    if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
-}
-
-function maybeTriggerRefresh() {
-    if (cacheAgeSeconds() < CACHE_TTL_S) return;
-    if (activeLock()) return;
-    try {
-        const child = spawn(process.execPath, [__filename, '--refresh'], {
-            detached: true,
-            stdio: 'ignore',
-            windowsHide: true,
-        });
-        child.unref();
-    } catch { /* swallow */ }
-}
-
-// ---------- --refresh mode ----------
-async function refreshUsage() {
-    ensureCacheDir();
-    // brief lock so concurrent refreshes don't stampede
-    writeLock(Math.floor(Date.now() / 1000) + LOCK_TTL_S, null);
-
-    const token = readOAuthToken();
-    if (!token) {
-        writeCache({ error: 'no-token' });
-        clearLock();
-        return;
-    }
-
-    const result = await httpGetJson(USAGE_URL, {
-        Authorization: `Bearer ${token}`,
-        'anthropic-beta': 'oauth-2025-04-20',
-    }, API_TIMEOUT_MS);
-
-    if (result.status === 429) {
-        const retry = parseInt(result.headers['retry-after'] || '', 10);
-        const backoff = Number.isFinite(retry) && retry > 0 ? retry : DEFAULT_BACKOFF_S;
-        writeLock(Math.floor(Date.now() / 1000) + backoff, 'rate-limited');
-        // keep stale cache intact
-        return;
-    }
-
-    if (result.status !== 200 || !result.body) {
-        // keep prior cache; just clear our own short lock
-        clearLock();
-        return;
-    }
-
-    const data = result.body;
-    writeCache({
-        sessionUsage: data.five_hour?.utilization ?? null,
-        sessionResetAt: data.five_hour?.resets_at ?? null,
-        weeklyUsage: data.seven_day?.utilization ?? null,
-        weeklyResetAt: data.seven_day?.resets_at ?? null,
-        weeklySonnetUsage: data.seven_day_sonnet?.utilization ?? null,
-        weeklyOpusUsage: data.seven_day_opus?.utilization ?? null,
-    });
-    clearLock();
-}
-
-function writeCache(extra) {
-    const payload = JSON.stringify({ fetchedAt: Math.floor(Date.now() / 1000), ...extra });
-    const tmp = CACHE_FILE + '.tmp';
-    try {
-        fs.writeFileSync(tmp, payload);
-        fs.renameSync(tmp, CACHE_FILE);
-    } catch { /* ignore */ }
-}
-
-function readOAuthToken() {
-    // macOS: try keychain primary entry first, then ~/.claude/.credentials.json
-    if (process.platform === 'darwin') {
-        const secret = readKeychainSecret(KEYCHAIN_SERVICE);
-        const t = extractToken(secret);
-        if (t) return t;
-    }
-    try {
-        const credPath = path.join(os.homedir(), '.claude', '.credentials.json');
-        return extractToken(fs.readFileSync(credPath, 'utf8'));
-    } catch { return null; }
-}
-
-function readKeychainSecret(service) {
-    try {
-        return execFileSync('security', ['find-generic-password', '-s', service, '-w'],
-            { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
-    } catch { return null; }
-}
-
-function extractToken(raw) {
-    if (!raw) return null;
-    try {
-        const obj = JSON.parse(raw);
-        return obj?.claudeAiOauth?.accessToken || null;
-    } catch { return null; }
-}
-
-function httpGetJson(url, headers, timeoutMs) {
-    return new Promise((resolve) => {
-        let settled = false;
-        const done = (v) => { if (!settled) { settled = true; resolve(v); } };
-        let req;
-        try {
-            req = https.request(url, { method: 'GET', headers, timeout: timeoutMs }, (res) => {
-                let body = '';
-                res.setEncoding('utf8');
-                res.on('data', (c) => { body += c; });
-                res.on('end', () => {
-                    let parsed = null;
-                    try { parsed = JSON.parse(body); } catch { /* may be empty */ }
-                    done({ status: res.statusCode || 0, headers: res.headers, body: parsed });
-                });
-            });
-        } catch {
-            done({ status: 0, headers: {}, body: null });
-            return;
-        }
-        req.on('error', () => done({ status: 0, headers: {}, body: null }));
-        req.on('timeout', () => { try { req.destroy(); } catch {}; done({ status: 0, headers: {}, body: null }); });
-        req.end();
-    });
 }

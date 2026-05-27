@@ -122,11 +122,6 @@
       }
     ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "node ${HOME}/.claude/statusline/statusline.js",
-    "padding": 0
-  },
   "enabledPlugins": {
     "skill-creator@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
@@ -144,6 +139,11 @@
         "repo": "wonjinsin/harness-flow"
       }
     }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node ${HOME}/.claude/statusline/statusline.js",
+    "padding": 0
   },
   "effortLevel": "high",
   "advisorModel": "opus",
