@@ -66,7 +66,6 @@
       "Bash(wc:*)",
       "Bash(which:*)",
       "Bash(yq:*)",
-      "Write(~/.claude/README.md)",
       "Edit(~/.claude/README.md)"
     ],
     "deny": [
@@ -105,11 +104,11 @@
       "Bash(git push -f:*)",
       "Bash(wget:*)",
       "Edit(~/.claude/hooks/**)",
-      "Edit(~/.claude/settings.json)",
-      "Write(~/.claude/settings.json)"
+      "Edit(~/.claude/settings.json)"
     ],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
   "hooks": {
     "Stop": [
       {
@@ -121,6 +120,11 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node ${HOME}/.claude/statusline/statusline.js",
+    "padding": 0
   },
   "enabledPlugins": {
     "skill-creator@claude-plugins-official": true,
@@ -140,13 +144,9 @@
       }
     }
   },
-  "statusLine": {
-    "type": "command",
-    "command": "node ${HOME}/.claude/statusline/statusline.js",
-    "padding": 0
-  },
   "effortLevel": "high",
   "advisorModel": "opus",
+  "tui": "default",
   "skipDangerousModePermissionPrompt": true,
   "skipAutoPermissionPrompt": true
 }
