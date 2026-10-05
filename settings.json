@@ -109,7 +109,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
+  "model": "fable[1m]",
   "hooks": {
     "Stop": [
       {
@@ -142,9 +142,11 @@
       "source": {
         "source": "github",
         "repo": "wonjinsin/harness-flow"
-      }
+      },
+      "autoUpdate": true
     }
   },
+  "outputStyle": "Attention-kind",
   "effortLevel": "high",
   "advisorModel": "opus",
   "tui": "default",
