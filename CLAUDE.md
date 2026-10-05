@@ -5,3 +5,7 @@
 - Commit messages: Write in English
 - Documentation: Write in Korean (IMPORTANT)
 - Variable/function names: English (follow code standards)
+
+# Coding Guidelines
+
+@skills/karpathy-guidelines/SKILL.md
